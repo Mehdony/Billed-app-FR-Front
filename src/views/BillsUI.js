@@ -1,7 +1,6 @@
 import VerticalLayout from './VerticalLayout.js'
 import ErrorPage from "./ErrorPage.js"
 import LoadingPage from "./LoadingPage.js"
-
 import Actions from './Actions.js'
 
 const row = (bill) => {
@@ -9,7 +8,7 @@ const row = (bill) => {
     <tr>
       <td>${bill.type}</td>
       <td>${bill.name}</td>
-      <td>${bill.date}</td>
+      <td>${bill.formatedDate ?? bill.date}</td>
       <td>${bill.amount} €</td>
       <td>${bill.status}</td>
       <td>
@@ -20,6 +19,11 @@ const row = (bill) => {
   }
 
 const rows = (data) => {
+  //  fonction de tri anti-chronologique
+  const antiChrono = (a, b) => ((a < b) ? 1 : -1)
+  //  si data n'est pas vide, on trie les données par date
+  data?.sort((a,b) => antiChrono(a.date, b.date))
+  //  on retourne le résultat du tri
   return (data && data.length) ? data.map(bill => row(bill)).join("") : ""
 }
 

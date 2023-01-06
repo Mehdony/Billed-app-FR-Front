@@ -38,7 +38,8 @@ export default class {
             try {
               return {
                 ...doc,
-                date: formatDate(doc.date),
+                // on utilise la fonction formatDate pour formater la date et l'utiliser dans le modèle billUI
+                formatedDate: formatDate(doc.date),
                 status: formatStatus(doc.status)
               }
             } catch(e) {
@@ -47,6 +48,7 @@ export default class {
               console.log(e,'for',doc)
               return {
                 ...doc,
+                // on utilise doc.date directement car la fonction formatDate a échoué
                 date: doc.date,
                 status: formatStatus(doc.status)
               }
@@ -55,6 +57,7 @@ export default class {
           console.log('length', bills.length)
         return bills
       })
+      .catch(error => {throw error})
     }
   }
 }
