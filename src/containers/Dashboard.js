@@ -35,7 +35,7 @@ export const card = (bill) => {
   firstAndLastNames.split('.')[1] : firstAndLastNames
 
   return (`
-    <div class='bill-card' id='open-bill${bill.id}' data-testid='open-bill${bill.id}'>
+    <div class='bill-card inactive' id='open-bill${bill.id}' data-testid='open-bill${bill.id}'>
       <div class='bill-card-name-container'>
         <div class='bill-card-name'> ${firstName} ${lastName} </div>
         <span class='bill-card-grey'> ... </span>
@@ -131,21 +131,28 @@ export default class {
   }
 
   handleShowTickets(e, bills, index) {
+    // handle arrow icon
     if (this.counter === undefined || this.index !== index) this.counter = 0
     if (this.index === undefined || this.index !== index) this.index = index
-    if (this.counter % 2 === 0) {
+    if (!e.currentTarget.classList.contains('inactive')) {
       $(`#arrow-icon${this.index}`).css({ transform: 'rotate(0deg)'})
       $(`#status-bills-container${this.index}`)
         .html(cards(filteredBills(bills, getStatus(this.index))))
-      this.counter ++
+        e.currentTarget.classList.add('inactive')
     } else {
       $(`#arrow-icon${this.index}`).css({ transform: 'rotate(90deg)'})
       $(`#status-bills-container${this.index}`)
         .html("")
-      this.counter ++
+        e.currentTarget.classList.remove('inactive')
     }
 
-    bills.forEach(bill => {
+    // handle click on bill
+
+    // bills.forEach(bill => {
+    //   $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
+    // })
+
+    filteredBills(bills, getStatus(this.index)).forEach(bill => {
       $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
     })
 
