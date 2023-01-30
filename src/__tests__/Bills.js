@@ -7,8 +7,10 @@ import BillsUI from "../views/BillsUI.js";
 import { bills } from "../fixtures/bills.js";
 import { ROUTES, ROUTES_PATH } from "../constants/routes.js";
 import { localStorageMock } from "../__mocks__/localStorage.js";
+import mockStore from "../__mocks__/store";
 
 import router from "../app/Router.js";
+import Bills from "../containers/Bills.js";
 
 describe("Given I am connected as an employee", () => {
   describe("When I am on Bills Page", () => {
@@ -45,7 +47,49 @@ describe("Given I am connected as an employee", () => {
       const datesSorted = [...dates].sort(antiChrono);
       expect(dates).toEqual(datesSorted);
     });
+
+    // vérification d'affichage de la page new bill
+    describe("When I click on the New Bill button", () => {
+      test("Then it should render NewBill page", () => {
+        const root = document.createElement("div");
+        root.setAttribute("id", "root");
+        document.body.append(root);
+        router();
+        window.onNavigate(ROUTES_PATH.Bills);
+        const newBill = screen.getByTestId("btn-new-bill");
+        newBill.click();
+        expect(screen.getByText("Envoyer une note de frais")).toBeTruthy();
+      });
+    });
+    test("Then it should render getBills", async () => {
+      const onNavigate = (pathname) => {
+        // on simule la navigation ver la page
+        document.body.innerHTML = ROUTES({ pathname });
+      };
+      Object.defineProperty(window, "localStorage", {
+        value: localStorageMock,
+      });
+      // on simule un utilisateur
+      window.localStorage.setItem(
+        "user",
+        JSON.stringify({
+          type: "Employee",
+        })
+      );
+      // on simule la création d'une note de frais 
+      const bills = new Bills({
+        document,
+        onNavigate,
+        store: mockStore,
+        localStorage: window.localStorage,
+      });
+      // on simule l'appel de la fonction getBills
+      const getBills = await bills.getBills();
+      // si la date apparait avec la valeur et le format déterminé c'est que ça fonctionne
+      expect(getBills[0].formatedDate).toBe("4 Avr. 04");
+    });
   });
+  
   describe("When i navigate to bills", () => {
     test("The it should render bills page", async () => {
       // simulation d'un utilisateur employee
