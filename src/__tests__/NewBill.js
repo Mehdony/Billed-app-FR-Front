@@ -12,6 +12,7 @@ import { fireEvent } from "@testing-library/dom"
 
 describe("Given I am connected as an employee", () => {
   describe('When I am on NewBill Page', () => {
+    // permet de verifier l'affochage de la page newBill
     test('I should see a title name ( Envoyer une note de frais) ', async () => {
       localStorage.setItem(
         'user',
@@ -25,6 +26,7 @@ describe("Given I am connected as an employee", () => {
       await waitFor(() => screen.getByText('Envoyer une note de frais'))
       expect(screen.getByText('Envoyer une note de frais')).toBeTruthy()
     })
+    // permet de vérifier que les images soient au bon format
     test(' Then on image upload checkExtension should return true if file passed is boby.png', () => {
       const html = NewBillUI()
   
@@ -43,6 +45,8 @@ describe("Given I am connected as an employee", () => {
       expect(checkExtension(fileName)).toBeTruthy()
     })
   })
+
+  //vérification de l'upload des fichiers 
   describe('When I am on NewBill Page and I upload a file', async () => {
     jest.spyOn(mockStore, 'bills')
 
@@ -71,6 +75,8 @@ describe("Given I am connected as an employee", () => {
       expect(mockStore.bills().create).toHaveBeenCalled()
     })
   })
+
+  // création de la facture
   describe('When I am on NewBill Page and I submit a new bill', () => {
     test('Then It should create a bill', async () => {
       const html = NewBillUI()
