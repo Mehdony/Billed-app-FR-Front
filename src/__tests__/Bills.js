@@ -14,6 +14,7 @@ import Bills from "../containers/Bills.js";
 
 describe("Given I am connected as an employee", () => {
   describe("When I am on Bills Page", () => {
+    // test 1 
     test("Then bill icon in vertical layout should be highlighted", async () => {
       Object.defineProperty(window, "localStorage", {
         value: localStorageMock,
@@ -28,11 +29,13 @@ describe("Given I am connected as an employee", () => {
       root.setAttribute("id", "root");
       document.body.append(root);
       router();
+      // expect 
       window.onNavigate(ROUTES_PATH.Bills);
       await waitFor(() => screen.getByTestId("icon-window"));
       const windowIcon = screen.getByTestId("icon-window");
       expect(windowIcon.classList.contains("active-icon")).toBeTruthy();
     });
+    // test 2
     test("Then bills should be ordered from earliest to latest", () => {
       // on simule l'affichage des factures ( déjà triées par date)
       document.body.innerHTML = BillsUI({ data: bills });
@@ -42,7 +45,7 @@ describe("Given I am connected as an employee", () => {
           /^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i
         )
         .map((a) => a.innerHTML);
-      // on vérifie que les dates sont bien dans l'ordre chronologique
+      // on vérifie que les dates sont bien dans l'ordre antichronologique
       const antiChrono = (a, b) => (a < b ? 1 : -1);
       const datesSorted = [...dates].sort(antiChrono);
       expect(dates).toEqual(datesSorted);
@@ -50,6 +53,7 @@ describe("Given I am connected as an employee", () => {
 
     // vérification d'affichage de la page new bill
     describe("When I click on the New Bill button", () => {
+      // test 3
       test("Then it should render NewBill page", () => {
         const root = document.createElement("div");
         root.setAttribute("id", "root");
@@ -61,6 +65,7 @@ describe("Given I am connected as an employee", () => {
         expect(screen.getByText("Envoyer une note de frais")).toBeTruthy();
       });
     });
+    // test 4
     test("Then it should render getBills", async () => {
       const onNavigate = (pathname) => {
         // on simule la navigation ver la page
@@ -91,6 +96,7 @@ describe("Given I am connected as an employee", () => {
   });
   
   describe("When i navigate to bills", () => {
+    // test 5 
     test("The it should render bills page", async () => {
       // simulation d'un utilisateur employee
       localStorage.setItem(
@@ -108,6 +114,7 @@ describe("Given I am connected as an employee", () => {
       await waitFor(() => screen.getByText("Mes notes de frais"));
       expect(screen.getByText("Mes notes de frais")).toBeTruthy();
     });
+    // test 6 
     test("Then click on icon-eye should make the modal open", async () => {
       //  création d'une fonction basée sur jest.fn
       $.fn.modal = jest.fn();
